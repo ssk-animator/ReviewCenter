@@ -5,182 +5,150 @@
 <title>ReviewCenter</title>
 
 <style>
-:root {
-  --bg: #0b0f14;
-  --panel: #11161d;
-  --card: #161b22;
-  --line: #2a2f36;
-  --text: #e6e6e6;
-  --muted: #9aa0a6;
-  --accent: #b78fbf;
+:root{
+  --bg:#0b0f14;
+  --panel:#11161d;
+  --card:#161b22;
+  --line:#2a2f36;
+  --text:#e6e6e6;
+  --muted:#9aa0a6;
+  --accent:#b78fbf;
 }
 
-* {
-  box-sizing: border-box;
-  font-family: system-ui, sans-serif;
-}
+*{box-sizing:border-box;font-family:system-ui,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text)}
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
+/* TOP BAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 16px;
+  background:var(--panel);
+  border-bottom:1px solid var(--line);
 }
+.nav-left span{
+  margin-right:18px;
+  cursor:pointer;
+}
+.nav-left .active{color:var(--accent)}
 
-/* GLOBAL NAV */
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 16px;
-  background: var(--panel);
-  border-bottom: 1px solid var(--line);
+/* PROJECT SEARCH PANEL */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:none;
+  z-index:100;
 }
-
-.nav-left span {
-  margin-right: 16px;
-  cursor: pointer;
+.overlay.show{display:block}
+.overlay-box{
+  width:820px;
+  margin:70px auto;
+  background:var(--panel);
+  padding:16px;
+  border-radius:8px;
 }
-
-.nav-left .active {
-  color: var(--accent);
+.overlay-box input{
+  width:100%;
+  padding:10px;
+  margin-bottom:14px;
+  background:#0d1116;
+  border:1px solid var(--line);
+  color:#fff;
 }
-
-/* PROJECT OVERLAY */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
+.overlay-box h4{
+  font-size:12px;
+  color:var(--muted);
+  margin:14px 0 6px;
 }
-
-.overlay.show {
-  display: block;
+.project-item{
+  padding:8px;
+  border-radius:4px;
+  cursor:pointer;
 }
-
-.overlay-box {
-  background: var(--panel);
-  width: 600px;
-  margin: 80px auto;
-  padding: 16px;
-  border-radius: 8px;
-}
-
-.project-item {
-  padding: 8px;
-  border-bottom: 1px solid var(--line);
-  cursor: pointer;
-}
+.project-item:hover{background:var(--card)}
 
 /* MY TASKS */
-.board {
-  padding: 16px;
+.board{padding:16px}
+.kpi{margin-bottom:10px}
+.tabs{margin-bottom:14px}
+.tab{
+  padding:6px 12px;
+  margin-right:6px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
+  color:var(--muted);
 }
-
-.columns {
-  display: flex;
-  gap: 12px;
+.tab.active{background:rgba(183,143,191,.2);color:#fff}
+.columns{display:flex;gap:12px}
+.column{
+  flex:1;
+  background:var(--panel);
+  padding:12px;
+  border-radius:8px;
 }
-
-.column {
-  flex: 1;
-  background: var(--panel);
-  padding: 12px;
-  border-radius: 8px;
-}
-
-.task-card {
-  background: var(--card);
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  cursor: pointer;
+.task-card{
+  background:var(--card);
+  padding:10px;
+  border-radius:6px;
+  margin-bottom:8px;
 }
 
 /* PROJECT VIEW */
-.project-code {
-  display: none;
-  height: calc(100vh - 52px);
+.project-view{display:none;height:calc(100vh - 52px)}
+.project-header{
+  padding:10px 16px;
+  border-bottom:1px solid var(--line);
+  background:var(--panel);
+  font-weight:600;
 }
-
-.project-header {
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
-  background: var(--panel);
-  font-weight: 600;
+.project-tabs{
+  display:flex;
+  gap:8px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--line);
 }
-
-/* PROJECT TABS */
-.project-tabs {
-  display: flex;
-  gap: 8px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--line);
+.project-tab{
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
+  color:var(--muted);
 }
-
-.project-tab {
-  padding: 6px 12px;
-  font-size: 13px;
-  color: var(--muted);
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.project-tab.active {
-  background: rgba(183,143,191,0.2);
-  color: var(--text);
-}
-
-/* PROJECT BODY */
-.project-body {
-  display: flex;
-  height: calc(100% - 92px);
+.project-tab.active{background:rgba(183,143,191,.2);color:#fff}
+.project-body{
+  display:flex;
+  height:calc(100% - 92px);
 }
 
 /* PIPELINE */
-.pipeline-panel {
-  width: 260px;
-  border-right: 1px solid var(--line);
-  padding: 12px;
-  overflow-y: auto;
+.pipeline{
+  width:260px;
+  border-right:1px solid var(--line);
+  padding:12px;
 }
-
-.pipeline-item {
-  padding: 6px;
-  font-size: 13px;
-  cursor: pointer;
+.pipe-item{
+  padding:6px;
+  cursor:pointer;
 }
+.pipe-item.active{background:var(--card);border-radius:4px}
 
-.pipeline-item.active {
-  background: var(--card);
-  border-radius: 4px;
-}
-
-/* TASKS PANEL */
-.tasks-panel {
-  flex: 1;
-  padding: 12px;
-  overflow-y: auto;
-}
-
-/* VERSIONS PANEL */
-.versions-panel {
-  flex: 1;
-  padding: 12px;
-  display: none;
-}
-
-/* TIMELINE */
-.timeline-panel {
-  width: 300px;
-  border-left: 1px solid var(--line);
-  padding: 12px;
-  color: var(--muted);
+/* PANELS */
+.tasks-panel,.versions-panel{flex:1;padding:12px}
+.versions-panel{display:none}
+.timeline{
+  width:300px;
+  border-left:1px solid var(--line);
+  padding:12px;
+  color:var(--muted);
 }
 </style>
 </head>
 
 <body>
 
-<!-- GLOBAL NAV -->
+<!-- TOP BAR -->
 <div class="topbar">
   <div class="nav-left">
     <span id="btnProjects">Projects</span>
@@ -189,23 +157,39 @@ body {
   </div>
 </div>
 
-<!-- PROJECT OVERLAY -->
+<!-- PROJECT SEARCH -->
 <div class="overlay" id="projectOverlay">
   <div class="overlay-box">
-    <div class="project-item">LE 2880 LOQ 15AHP11</div>
+    <input placeholder="Type to filter projects…" />
+    <h4>Recent Projects</h4>
+    <div class="project-item">PRJ-001 | Demo Product Launch</div>
+    <h4>My Projects</h4>
+    <div class="project-item">PRJ-002 | Brand Animation</div>
+    <h4>Active Projects</h4>
+    <div class="project-item">PRJ-003 | Marketing Video</div>
   </div>
 </div>
 
 <!-- MY TASKS -->
 <div class="board" id="myTasks">
+  <div class="kpi">
+    <strong>3</strong> Tasks · <strong>2</strong> Not started · <strong>1</strong> In progress
+  </div>
+
+  <div class="tabs">
+    <span class="tab active">Task board</span>
+    <span class="tab">Task list</span>
+    <span class="tab">Schedule</span>
+  </div>
+
   <div class="columns">
     <div class="column">
       <h4>Open</h4>
-      <div class="task-card">Animation_04</div>
+      <div class="task-card">Animation Task 01</div>
     </div>
     <div class="column">
       <h4>In Progress</h4>
-      <div class="task-card">Anim + Retime 02</div>
+      <div class="task-card">Retiming Task</div>
     </div>
     <div class="column">
       <h4>Closed</h4>
@@ -215,10 +199,10 @@ body {
 </div>
 
 <!-- PROJECT VIEW -->
-<div class="project-code" id="projectCode">
-
+<div class="project-view" id="projectView">
   <div class="project-header">
-    LE 2880 LOQ 15AHP11
+    <span id="backBtn" style="cursor:pointer;color:var(--muted);margin-right:8px">←</span>
+    PRJ-003 | Marketing Video
   </div>
 
   <div class="project-tabs">
@@ -229,79 +213,64 @@ body {
   </div>
 
   <div class="project-body">
-
-    <!-- PIPELINE -->
-    <div class="pipeline-panel">
-      <div class="pipeline-item active">02_Animation</div>
-      <div class="pipeline-item">03_Edit</div>
-      <div class="pipeline-item">OUTPUT</div>
+    <div class="pipeline">
+      <div class="pipe-item active">02_Animation</div>
+      <div class="pipe-item">03_Edit</div>
+      <div class="pipe-item">Output</div>
     </div>
 
-    <!-- TASKS -->
     <div class="tasks-panel" id="tasksPanel">
-      <div class="task-card">Animation_01</div>
-      <div class="task-card">Animation_02</div>
-      <div class="task-card">Character anim + Retime_02</div>
+      <div class="task-card">Animation Shot 01</div>
+      <div class="task-card">Animation Shot 02</div>
     </div>
 
-    <!-- VERSIONS -->
     <div class="versions-panel" id="versionsPanel">
-      No versions yet
+      No versions uploaded yet
     </div>
 
-    <!-- TIMELINE -->
-    <div class="timeline-panel">
-      Timeline placeholder
-    </div>
-
+    <div class="timeline">Schedule placeholder</div>
   </div>
 </div>
 
 <script>
-const overlay = document.getElementById("projectOverlay");
-const btnProjects = document.getElementById("btnProjects");
-const projectCode = document.getElementById("projectCode");
-const myTasks = document.getElementById("myTasks");
+const overlay=document.getElementById("projectOverlay");
+const btnProjects=document.getElementById("btnProjects");
+const myTasks=document.getElementById("myTasks");
+const projectView=document.getElementById("projectView");
 
-btnProjects.onclick = () => overlay.classList.add("show");
+btnProjects.onclick=()=>overlay.classList.add("show");
 
-document.querySelector(".project-item").onclick = () => {
-  overlay.classList.remove("show");
-  myTasks.style.display = "none";
-  projectCode.style.display = "block";
-};
-
-let currentFolder = "02_Animation";
-
-document.querySelectorAll(".pipeline-item").forEach(item => {
-  item.onclick = () => {
-    document.querySelectorAll(".pipeline-item").forEach(i => i.classList.remove("active"));
-    item.classList.add("active");
-    currentFolder = item.innerText;
-    console.log("Folder:", currentFolder);
+document.querySelectorAll(".project-item").forEach(p=>{
+  p.onclick=()=>{
+    overlay.classList.remove("show");
+    myTasks.style.display="none";
+    projectView.style.display="block";
   };
 });
 
-const tabTasks = document.getElementById("tabTasks");
-const tabVersions = document.getElementById("tabVersions");
-const tasksPanel = document.getElementById("tasksPanel");
-const versionsPanel = document.getElementById("versionsPanel");
-
-tabTasks.onclick = () => {
-  tabTasks.classList.add("active");
-  tabVersions.classList.remove("active");
-  tasksPanel.style.display = "block";
-  versionsPanel.style.display = "none";
+document.getElementById("backBtn").onclick=()=>{
+  projectView.style.display="none";
+  myTasks.style.display="block";
 };
 
-tabVersions.onclick = () => {
+const tabTasks=document.getElementById("tabTasks");
+const tabVersions=document.getElementById("tabVersions");
+const tasksPanel=document.getElementById("tasksPanel");
+const versionsPanel=document.getElementById("versionsPanel");
+
+tabTasks.onclick=()=>{
+  tabTasks.classList.add("active");
+  tabVersions.classList.remove("active");
+  tasksPanel.style.display="block";
+  versionsPanel.style.display="none";
+};
+tabVersions.onclick=()=>{
   tabVersions.classList.add("active");
   tabTasks.classList.remove("active");
-  tasksPanel.style.display = "none";
-  versionsPanel.style.display = "block";
+  tasksPanel.style.display="none";
+  versionsPanel.style.display="block";
 };
 </script>
 
 </body>
 </html>
-
