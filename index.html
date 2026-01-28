@@ -106,6 +106,69 @@
     color: var(--muted);
     margin-top: 4px;
   }
+
+  /* Projects Overlay */
+  .overlay {
+    position: fixed;
+    top: 60px;
+    left: 16px;
+    right: 16px;
+    height: 70vh;
+    background: rgba(15,20,26,0.98);
+    border: 1px solid var(--line);
+    display: none;
+    z-index: 100;
+  }
+
+  .overlay.show {
+    display: block;
+  }
+
+  .overlay-header {
+    padding: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .overlay-header input {
+    width: 100%;
+    padding: 10px;
+    background: #0d1116;
+    border: 1px solid var(--line);
+    color: var(--text);
+    border-radius: 6px;
+  }
+
+  .overlay-body {
+    display: flex;
+    height: calc(100% - 54px);
+  }
+
+  .overlay-col {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    border-right: 1px solid var(--line);
+  }
+
+  .overlay-col:last-child {
+    border-right: none;
+  }
+
+  .overlay-col h4 {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .project-item {
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .project-item:hover {
+    background: var(--card);
+  }
 </style>
 </head>
 
@@ -160,6 +223,49 @@
   </div>
 
 </div>
+
+<!-- Projects Overlay -->
+<div class="overlay" id="projectsOverlay">
+  <div class="overlay-header">
+    <input type="text" placeholder="Type to filter…" />
+  </div>
+
+  <div class="overlay-body">
+    <div class="overlay-col">
+      <h4>RECENT PROJECTS</h4>
+      <div class="project-item">LE 2880 LOQ 15AHP11</div>
+      <div class="project-item">LE 2974 ThinkBook 14</div>
+    </div>
+
+    <div class="overlay-col">
+      <h4>MY PROJECTS</h4>
+      <div class="project-item">DE 1324 RT PowerMax</div>
+      <div class="project-item">DE 2154 EcoLoop</div>
+    </div>
+
+    <div class="overlay-col">
+      <h4>ACTIVE PROJECTS</h4>
+      <div class="project-item">AD 0306 Faster Than AR</div>
+      <div class="project-item">1538 Legion Slim 7i</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const projectsBtn = document.querySelector('.nav-item');
+  const overlay = document.getElementById('projectsOverlay');
+
+  projectsBtn.addEventListener('click', () => {
+    overlay.classList.toggle('show');
+  });
+
+  document.querySelectorAll('.project-item').forEach(item => {
+    item.addEventListener('click', () => {
+      overlay.classList.remove('show');
+      alert('Project selected: ' + item.innerText);
+    });
+  });
+</script>
 
 </body>
 </html>
