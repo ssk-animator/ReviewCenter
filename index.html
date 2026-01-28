@@ -263,6 +263,13 @@
     padding: 6px;
     resize: vertical;
   }
+
+  /* Phase 3A minimal CSS for project tabs and layout */
+  .project-tabs { display:flex; gap:8px; padding:10px 16px; border-bottom:1px solid #2a2f36 }
+  .project-tab { padding:6px 12px; font-size:13px; color:#9aa0a6; border-radius:6px; cursor:pointer }
+  .project-tab.active { background: rgba(183,143,191,0.2); color:#fff }
+  .project-body { display:flex; height: calc(100vh - 120px); }
+
 </style>
 </head>
 
@@ -289,17 +296,33 @@
   <div class="tab">Schedule</div>
 </div>
 
-<!-- Project Tabs -->
+<!-- Simulated Project Code View Header -->
+<div style="padding:12px 16px; border-bottom:1px solid var(--line);">
+  <div style="font-size:14px; font-weight:600;">LE 2880 LOQ 15AHP11</div>
+  <div style="font-size:12px; color:var(--muted);">Project code / assets</div>
+</div>
+
+<!-- Project Tabs (Project-level only) -->
 <div class="project-tabs">
-  <div class="project-tab active" id="tabTasks">Tasks</div>
-  <div class="project-tab" id="tabVersions">Versions</div>
+  <div class="project-tab active" id="projTabTasks">Tasks</div>
+  <div class="project-tab" id="projTabVersions">Versions</div>
+  <div class="project-tab">Team planner</div>
+  <div class="project-tab">Dashboards</div>
 </div>
 
 <!-- Project Body -->
 <div class="project-body">
 
-  <!-- Tasks Panel (moved board here) -->
-  <div class="tasks-panel">
+  <!-- LEFT: Pipeline (already exists) -->
+  <div class="pipeline-panel" style="width:240px; padding:12px; border-right:1px solid var(--line);">
+    <div style="font-size:13px; color:var(--muted); margin-bottom:8px;">Folders</div>
+    <div class="pipeline-item active" style="padding:8px; border-radius:4px; cursor:pointer; background:var(--card);">02_Animation</div>
+    <div class="pipeline-item" style="padding:8px; border-radius:4px; cursor:pointer; margin-top:6px;">03_Compositing</div>
+    <div class="pipeline-item" style="padding:8px; border-radius:4px; cursor:pointer; margin-top:6px;">04_Output</div>
+  </div>
+
+  <!-- CENTER: Tasks panel (wrap existing tasks here) -->
+  <div class="tasks-panel" id="tasksPanel" style="flex:1;">
     <!-- Task Board -->
     <div class="board">
 
@@ -330,13 +353,8 @@
     </div>
   </div>
 
-  <!-- Timeline placeholder -->
-  <div class="timeline-panel" style="display:block; padding:16px; color:var(--muted);">
-    Timeline / activity (placeholder)
-  </div>
-
-  <!-- Versions Panel -->
-  <div class="versions-panel" id="versionsPanel" style="display:none;">
+  <!-- CENTER (hidden): Versions panel -->
+  <div class="versions-panel" id="versionsPanel" style="display:none; flex:2; padding:12px;">
     <div class="version-actions">
       <div class="upload-btn" id="uploadBtn">Upload</div>
     </div>
@@ -347,6 +365,11 @@
         Upload your first file
       </div>
     </div>
+  </div>
+
+  <!-- RIGHT: Timeline / schedule (already exists) -->
+  <div class="timeline-panel" style="width:300px; padding:16px; color:var(--muted); border-left:1px solid var(--line);">
+    Timeline / activity (placeholder)
   </div>
 
 </div>
@@ -399,6 +422,7 @@
 </div>
 
 <script>
+  // Projects overlay logic (unchanged)
   const projectsBtn = document.querySelector('.nav-item');
   const overlay = document.getElementById('projectsOverlay');
 
@@ -413,37 +437,19 @@
     });
   });
 
-  const tabTasks = document.getElementById('tabTasks');
-  const tabVersions = document.getElementById('tabVersions');
-  const versionsPanel = document.getElementById('versionsPanel');
+  // Versions / Upload logic (existing)
   const uploadBtn = document.getElementById('uploadBtn');
   const uploadModal = document.getElementById('uploadModal');
   const versionsContent = document.getElementById('versionsContent');
 
   let hasVersion = false;
 
-  tabVersions.onclick = () => {
-    tabTasks.classList.remove('active');
-    tabVersions.classList.add('active');
-    document.querySelector('.tasks-panel').style.display = 'none';
-    document.querySelector('.timeline-panel').style.display = 'none';
-    versionsPanel.style.display = 'block';
-  };
-
-  tabTasks.onclick = () => {
-    tabVersions.classList.remove('active');
-    tabTasks.classList.add('active');
-    document.querySelector('.tasks-panel').style.display = 'block';
-    document.querySelector('.timeline-panel').style.display = 'block';
-    versionsPanel.style.display = 'none';
-  };
-
-  uploadBtn.onclick = () => {
+  uploadBtn && (uploadBtn.onclick = () => {
     uploadModal.style.display = 'flex';
     document.getElementById('versionUp').style.display = hasVersion ? 'block' : 'none';
-  };
+  });
 
-  document.getElementById('confirmUpload').onclick = () => {
+  document.getElementById('confirmUpload') && (document.getElementById('confirmUpload').onclick = () => {
     hasVersion = true;
     versionsContent.innerHTML = `
       <table class="version-table">
@@ -464,11 +470,41 @@
       </table>
     `;
     uploadModal.style.display = 'none';
-  };
+  });
 
-  uploadModal.onclick = (e) => {
+  uploadModal && (uploadModal.onclick = (e) => {
     if (e.target === uploadModal) uploadModal.style.display = 'none';
-  };
+  });
+
+  // Phase 3A: Folder context tracking
+  let currentFolder = "02_Animation";
+  document.querySelectorAll('.pipeline-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.pipeline-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      currentFolder = item.innerText.trim();
+      console.log('Current folder set to', currentFolder);
+    });
+  });
+
+  // Phase 3A: Project-level tab switching (Tasks <-> Versions)
+  const tabTasks = document.getElementById('projTabTasks');
+  const tabVersions = document.getElementById('projTabVersions');
+
+  tabTasks && (tabTasks.onclick = () => {
+    tabTasks.classList.add('active');
+    tabVersions.classList.remove('active');
+    document.getElementById('tasksPanel').style.display = 'block';
+    document.getElementById('versionsPanel').style.display = 'none';
+  });
+
+  tabVersions && (tabVersions.onclick = () => {
+    tabVersions.classList.add('active');
+    tabTasks.classList.remove('active');
+    document.getElementById('tasksPanel').style.display = 'none';
+    document.getElementById('versionsPanel').style.display = 'block';
+  });
+
 </script>
 
 </body>
