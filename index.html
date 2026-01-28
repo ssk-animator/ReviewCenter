@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title>ReviewCenter</title>
 
 <style>
@@ -32,7 +32,7 @@ body{margin:0;background:var(--bg);color:var(--text)}
 }
 .nav-left .active{color:var(--accent)}
 
-/* PROJECT SEARCH PANEL */
+/* PROJECT OVERLAY */
 .overlay{
   position:fixed;
   inset:0;
@@ -42,8 +42,8 @@ body{margin:0;background:var(--bg);color:var(--text)}
 }
 .overlay.show{display:block}
 .overlay-box{
-  width:820px;
-  margin:70px auto;
+  width:760px;
+  margin:80px auto;
   background:var(--panel);
   padding:16px;
   border-radius:8px;
@@ -117,6 +117,7 @@ body{margin:0;background:var(--bg);color:var(--text)}
   color:var(--muted);
 }
 .project-tab.active{background:rgba(183,143,191,.2);color:#fff}
+
 .project-body{
   display:flex;
   height:calc(100% - 92px);
@@ -124,24 +125,37 @@ body{margin:0;background:var(--bg);color:var(--text)}
 
 /* PIPELINE */
 .pipeline{
-  width:260px;
+  width:240px;
   border-right:1px solid var(--line);
   padding:12px;
 }
 .pipe-item{
-  padding:6px;
+  padding:8px;
   cursor:pointer;
 }
-.pipe-item.active{background:var(--card);border-radius:4px}
+.pipe-item.active{
+  background:var(--card);
+  border-radius:4px;
+}
 
 /* PANELS */
 .tasks-panel,.versions-panel{flex:1;padding:12px}
 .versions-panel{display:none}
 .timeline{
-  width:300px;
+  width:280px;
   border-left:1px solid var(--line);
   padding:12px;
   color:var(--muted);
+}
+
+/* UPLOAD */
+.upload-btn{
+  float:right;
+  padding:6px 12px;
+  background:#5c2d91;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
 }
 </style>
 </head>
@@ -160,7 +174,7 @@ body{margin:0;background:var(--bg);color:var(--text)}
 <!-- PROJECT SEARCH -->
 <div class="overlay" id="projectOverlay">
   <div class="overlay-box">
-    <input placeholder="Type to filter projects…" />
+    <input placeholder="Type to filter projects..." />
     <h4>Recent Projects</h4>
     <div class="project-item">PRJ-001 | Demo Product Launch</div>
     <h4>My Projects</h4>
@@ -173,29 +187,24 @@ body{margin:0;background:var(--bg);color:var(--text)}
 <!-- MY TASKS -->
 <div class="board" id="myTasks">
   <div class="kpi">
-    <strong>3</strong> Tasks · <strong>2</strong> Not started · <strong>1</strong> In progress
+    <strong>1</strong> Task · <strong>0</strong> Not started · <strong>1</strong> In progress
   </div>
 
   <div class="tabs">
-    <span class="tab active">Task board</span>
-    <span class="tab">Task list</span>
-    <span class="tab">Schedule</span>
+    <span class="tab active" id="tabBoard">Task board</span>
+    <span class="tab" id="tabList">Task list</span>
+    <span class="tab" id="tabSchedule">Schedule</span>
   </div>
 
-  <div class="columns">
-    <div class="column">
-      <h4>Open</h4>
-      <div class="task-card">Animation Task 01</div>
-    </div>
+  <div class="columns" id="taskBoard">
     <div class="column">
       <h4>In Progress</h4>
-      <div class="task-card">Retiming Task</div>
-    </div>
-    <div class="column">
-      <h4>Closed</h4>
-      <div class="task-card">Final Output</div>
+      <div class="task-card">Animation Shot 01</div>
     </div>
   </div>
+
+  <div id="taskList" style="display:none">List view placeholder</div>
+  <div id="scheduleView" style="display:none">Schedule view placeholder</div>
 </div>
 
 <!-- PROJECT VIEW -->
@@ -206,8 +215,8 @@ body{margin:0;background:var(--bg);color:var(--text)}
   </div>
 
   <div class="project-tabs">
-    <div class="project-tab active" id="tabTasks">Tasks</div>
-    <div class="project-tab" id="tabVersions">Versions</div>
+    <div class="project-tab" id="projTasks">Tasks</div>
+    <div class="project-tab active" id="projVersions">Versions</div>
     <div class="project-tab">Team planner</div>
     <div class="project-tab">Dashboards</div>
   </div>
@@ -219,13 +228,9 @@ body{margin:0;background:var(--bg);color:var(--text)}
       <div class="pipe-item">Output</div>
     </div>
 
-    <div class="tasks-panel" id="tasksPanel">
-      <div class="task-card">Animation Shot 01</div>
-      <div class="task-card">Animation Shot 02</div>
-    </div>
-
-    <div class="versions-panel" id="versionsPanel">
-      No versions uploaded yet
+    <div class="versions-panel" style="display:block">
+      <div class="upload-btn">Upload</div>
+      <p>No versions uploaded yet</p>
     </div>
 
     <div class="timeline">Schedule placeholder</div>
@@ -234,11 +239,8 @@ body{margin:0;background:var(--bg);color:var(--text)}
 
 <script>
 const overlay=document.getElementById("projectOverlay");
-const btnProjects=document.getElementById("btnProjects");
-const myTasks=document.getElementById("myTasks");
-const projectView=document.getElementById("projectView");
-
 btnProjects.onclick=()=>overlay.classList.add("show");
+overlay.onclick=e=>{if(e.target===overlay)overlay.classList.remove("show")};
 
 document.querySelectorAll(".project-item").forEach(p=>{
   p.onclick=()=>{
@@ -248,28 +250,14 @@ document.querySelectorAll(".project-item").forEach(p=>{
   };
 });
 
-document.getElementById("backBtn").onclick=()=>{
+backBtn.onclick=()=>{
   projectView.style.display="none";
   myTasks.style.display="block";
 };
 
-const tabTasks=document.getElementById("tabTasks");
-const tabVersions=document.getElementById("tabVersions");
-const tasksPanel=document.getElementById("tasksPanel");
-const versionsPanel=document.getElementById("versionsPanel");
-
-tabTasks.onclick=()=>{
-  tabTasks.classList.add("active");
-  tabVersions.classList.remove("active");
-  tasksPanel.style.display="block";
-  versionsPanel.style.display="none";
-};
-tabVersions.onclick=()=>{
-  tabVersions.classList.add("active");
-  tabTasks.classList.remove("active");
-  tasksPanel.style.display="none";
-  versionsPanel.style.display="block";
-};
+tabBoard.onclick=()=>{taskBoard.style.display="flex";taskList.style.display="none";scheduleView.style.display="none"};
+tabList.onclick=()=>{taskBoard.style.display="none";taskList.style.display="block";scheduleView.style.display="none"};
+tabSchedule.onclick=()=>{taskBoard.style.display="none";taskList.style.display="none";scheduleView.style.display="block"};
 </script>
 
 </body>
