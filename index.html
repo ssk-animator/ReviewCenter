@@ -1,511 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>ReviewCenter – My Tasks</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<style>
-  :root {
-    --bg: #0f141a;
-    --panel: #12161b;
-    --card: #171b20;
-    --line: #23282f;
-    --text: #e6edf3;
-    --muted: #9aa4af;
-    --accent: #b78fbf;
-  }
-
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: Inter, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-  }
-
-  /* Top Bar */
-  .topbar {
-    height: 52px;
-    background: var(--panel);
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    border-bottom: 1px solid var(--line);
-  }
-  .nav-item {
-    margin-right: 18px;
-    color: var(--muted);
-    cursor: pointer;
-  }
-  .nav-item.active {
-    color: var(--text);
-    border-bottom: 3px solid var(--accent);
-    padding-bottom: 14px;
-  }
-
-  /* Header Stats */
-  .stats {
-    display: flex;
-    gap: 16px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--line);
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  /* Tabs */
-  .tabs {
-    display: flex;
-    gap: 8px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--line);
-  }
-  .tab {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    color: var(--muted);
-  }
-  .tab.active {
-    background: rgba(183,143,191,0.15);
-    color: var(--text);
-  }
-
-  /* Board */
-  .board {
-    display: flex;
-    gap: 16px;
-    padding: 16px;
-    height: calc(100vh - 220px);
-  }
-
-  .column {
-    flex: 1;
-    background: transparent;
-  }
-  .column-title {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 8px;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  .card-title {
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .card-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  /* Projects Overlay */
-  .overlay {
-    position: fixed;
-    top: 60px;
-    left: 16px;
-    right: 16px;
-    height: 70vh;
-    background: rgba(15,20,26,0.98);
-    border: 1px solid var(--line);
-    display: none;
-    z-index: 100;
-  }
-
-  .overlay.show {
-    display: block;
-  }
-
-  .overlay-header {
-    padding: 12px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .overlay-header input {
-    width: 100%;
-    padding: 10px;
-    background: #0d1116;
-    border: 1px solid var(--line);
-    color: var(--text);
-    border-radius: 6px;
-  }
-
-  .overlay-body {
-    display: flex;
-    height: calc(100% - 54px);
-  }
-
-  .overlay-col {
-    flex: 1;
-    padding: 12px;
-    overflow-y: auto;
-    border-right: 1px solid var(--line);
-  }
-
-  .overlay-col:last-child {
-    border-right: none;
-  }
-
-  .overlay-col h4 {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  .project-item {
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .project-item:hover {
-    background: var(--card);
-  }
-
-  /* Versions */
-  .project-tabs { padding: 12px 16px; border-bottom: 1px solid var(--line); display:flex; gap:8px }
-  .project-tab { padding:6px 12px; border-radius:6px; color:var(--muted); cursor:pointer }
-  .project-tab.active { color:var(--text); background: rgba(183,143,191,0.08) }
-
-  .versions-panel {
-    padding: 12px;
-  }
-
-  .version-actions {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .upload-btn {
-    background: rgba(183,143,191,0.2);
-    color: var(--text);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-  }
-
-  .version-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  .version-table th,
-  .version-table td {
-    padding: 8px;
-    border-bottom: 1px solid var(--line);
-    text-align: left;
-  }
-
-  .version-table th {
-    color: var(--muted);
-    font-weight: normal;
-  }
-
-  .empty-state {
-    padding: 40px;
-    text-align: center;
-    color: var(--muted);
-  }
-
-  /* Upload Modal */
-  .upload-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-  }
-
-  .upload-box {
-    background: var(--panel);
-    padding: 16px;
-    width: 420px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-  }
-
-  .upload-box h3 {
-    margin-top: 0;
-    font-size: 14px;
-  }
-
-  .upload-option {
-    padding: 10px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    margin-bottom: 8px;
-    cursor: pointer;
-  }
-
-  .upload-option:hover {
-    background: var(--card);
-  }
-
-  .upload-box textarea {
-    width: 100%;
-    background: #0d1116;
-    border: 1px solid var(--line);
-    color: var(--text);
-    margin-top: 8px;
-    padding: 6px;
-    resize: vertical;
-  }
-
-  /* Phase 3A minimal CSS for project tabs and layout */
-  .project-tabs { display:flex; gap:8px; padding:10px 16px; border-bottom:1px solid #2a2f36 }
-  .project-tab { padding:6px 12px; font-size:13px; color:#9aa0a6; border-radius:6px; cursor:pointer }
-  .project-tab.active { background: rgba(183,143,191,0.2); color:#fff }
-  .project-body { display:flex; height: calc(100vh - 120px); }
-
-</style>
+  <meta charset="UTF-8" />
+  <title>ReviewCenter</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f1115;
+      color: #ffffff;
+    }
+    header {
+      background: #151821;
+      padding: 12px 20px;
+      display: flex;
+      gap: 20px;
+    }
+    header a {
+      color: #ffffff;
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    header a:hover {
+      opacity: 1;
+    }
+    .container {
+      display: flex;
+      height: calc(100vh - 48px);
+    }
+    .sidebar {
+      width: 220px;
+      background: #12141b;
+      padding: 16px;
+    }
+    .sidebar h3 {
+      margin-top: 0;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+    .project {
+      padding: 8px 0;
+      cursor: pointer;
+    }
+    .project:hover {
+      text-decoration: underline;
+    }
+    .main {
+      flex: 1;
+      padding: 24px;
+    }
+  </style>
 </head>
-
 <body>
 
-<!-- Top Navigation -->
-<div class="topbar">
-  <div class="nav-item">Projects</div>
-  <div class="nav-item active">My Tasks</div>
-  <div class="nav-item">Bookmarks</div>
-</div>
+<header>
+  <a href="#">Projects</a>
+  <a href="#">My Tasks</a>
+  <a href="#">Bookmarks</a>
+  <a href="#">Settings</a>
+</header>
 
-<!-- Stats -->
-<div class="stats">
-  <div>1 Tasks</div>
-  <div>Not started</div>
-  <div>In progress</div>
-</div>
-
-<!-- Tabs -->
-<div class="tabs">
-  <div class="tab active">Task board</div>
-  <div class="tab">Task list</div>
-  <div class="tab">Schedule</div>
-</div>
-
-<!-- Simulated Project Code View Header -->
-<div style="padding:12px 16px; border-bottom:1px solid var(--line);">
-  <div style="font-size:14px; font-weight:600;">LE 2880 LOQ 15AHP11</div>
-  <div style="font-size:12px; color:var(--muted);">Project code / assets</div>
-</div>
-
-<!-- Project Tabs (Project-level only) -->
-<div class="project-tabs">
-  <div class="project-tab active" id="projTabTasks">Tasks</div>
-  <div class="project-tab" id="projTabVersions">Versions</div>
-  <div class="project-tab">Team planner</div>
-  <div class="project-tab">Dashboards</div>
-</div>
-
-<!-- Project Body -->
-<div class="project-body">
-
-  <!-- LEFT: Pipeline (already exists) -->
-  <div class="pipeline-panel" style="width:240px; padding:12px; border-right:1px solid var(--line);">
-    <div style="font-size:13px; color:var(--muted); margin-bottom:8px;">Folders</div>
-    <div class="pipeline-item active" style="padding:8px; border-radius:4px; cursor:pointer; background:var(--card);">02_Animation</div>
-    <div class="pipeline-item" style="padding:8px; border-radius:4px; cursor:pointer; margin-top:6px;">03_Compositing</div>
-    <div class="pipeline-item" style="padding:8px; border-radius:4px; cursor:pointer; margin-top:6px;">04_Output</div>
+<div class="container">
+  <div class="sidebar">
+    <h3>Projects</h3>
+    <div class="project">LOQ 15APH11</div>
+    <div class="project">Yoga Pro 7</div>
+    <div class="project">IdeaPad Gaming</div>
   </div>
 
-  <!-- CENTER: Tasks panel (wrap existing tasks here) -->
-  <div class="tasks-panel" id="tasksPanel" style="flex:1;">
-    <!-- Task Board -->
-    <div class="board">
+  <div class="main">
+    <h1>LOQ 15APH11</h1>
+    <p>Lenovo</p>
 
-      <div class="column">
-        <div class="column-title">Open (To Do)</div>
-        <div class="card">
-          <div class="card-title">Animation_04</div>
-          <div class="card-meta">LE 2880 / 02_Animation</div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="column-title">In Progress</div>
-        <div class="card">
-          <div class="card-title">Anim + Retime 02</div>
-          <div class="card-meta">LE 2974 / 02_Animation</div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="column-title">Closed</div>
-        <div class="card">
-          <div class="card-title">Final Output</div>
-          <div class="card-meta">LE 2154 / OUTPUT</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- CENTER (hidden): Versions panel -->
-  <div class="versions-panel" id="versionsPanel" style="display:none; flex:2; padding:12px;">
-    <div class="version-actions">
-      <div class="upload-btn" id="uploadBtn">Upload</div>
-    </div>
-
-    <div id="versionsContent">
-      <div class="empty-state">
-        No versions yet<br><br>
-        Upload your first file
-      </div>
-    </div>
-  </div>
-
-  <!-- RIGHT: Timeline / schedule (already exists) -->
-  <div class="timeline-panel" style="width:300px; padding:16px; color:var(--muted); border-left:1px solid var(--line);">
-    Timeline / activity (placeholder)
-  </div>
-
-</div>
-
-<!-- Projects Overlay -->
-<div class="overlay" id="projectsOverlay">
-  <div class="overlay-header">
-    <input type="text" placeholder="Type to filter…" />
-  </div>
-
-  <div class="overlay-body">
-    <div class="overlay-col">
-      <h4>RECENT PROJECTS</h4>
-      <div class="project-item">LE 2880 LOQ 15AHP11</div>
-      <div class="project-item">LE 2974 ThinkBook 14</div>
-    </div>
-
-    <div class="overlay-col">
-      <h4>MY PROJECTS</h4>
-      <div class="project-item">DE 1324 RT PowerMax</div>
-      <div class="project-item">DE 2154 EcoLoop</div>
-    </div>
-
-    <div class="overlay-col">
-      <h4>ACTIVE PROJECTS</h4>
-      <div class="project-item">AD 0306 Faster Than AR</div>
-      <div class="project-item">1538 Legion Slim 7i</div>
-    </div>
+    <h3>Tasks</h3>
+    <ul>
+      <li>Animation – Scene 04</li>
+      <li>Lighting Fix</li>
+      <li>Final Output</li>
+    </ul>
   </div>
 </div>
-
-<!-- Upload Modal -->
-<div class="upload-modal" id="uploadModal">
-  <div class="upload-box">
-    <h3>Upload File</h3>
-
-    <div class="upload-option" id="createNew">
-      Create New
-    </div>
-
-    <div class="upload-option" id="versionUp" style="display:none;">
-      Version Up (from existing)
-    </div>
-
-    <textarea placeholder="Add description..."></textarea>
-
-    <br><br>
-    <div class="upload-btn" id="confirmUpload">Confirm</div>
-  </div>
-</div>
-
-<script>
-  // Projects overlay logic (unchanged)
-  const projectsBtn = document.querySelector('.nav-item');
-  const overlay = document.getElementById('projectsOverlay');
-
-  projectsBtn.addEventListener('click', () => {
-    overlay.classList.toggle('show');
-  });
-
-  document.querySelectorAll('.project-item').forEach(item => {
-    item.addEventListener('click', () => {
-      overlay.classList.remove('show');
-      alert('Project selected: ' + item.innerText);
-    });
-  });
-
-  // Versions / Upload logic (existing)
-  const uploadBtn = document.getElementById('uploadBtn');
-  const uploadModal = document.getElementById('uploadModal');
-  const versionsContent = document.getElementById('versionsContent');
-
-  let hasVersion = false;
-
-  uploadBtn && (uploadBtn.onclick = () => {
-    uploadModal.style.display = 'flex';
-    document.getElementById('versionUp').style.display = hasVersion ? 'block' : 'none';
-  });
-
-  document.getElementById('confirmUpload') && (document.getElementById('confirmUpload').onclick = () => {
-    hasVersion = true;
-    versionsContent.innerHTML = `
-      <table class="version-table">
-        <tr>
-          <th>Version</th>
-          <th>Status</th>
-          <th>Asset Type</th>
-          <th>Published</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>v${hasVersion ? 2 : 1}</td>
-          <td>Open</td>
-          <td>Scene</td>
-          <td>Just now</td>
-          <td>Initial upload</td>
-        </tr>
-      </table>
-    `;
-    uploadModal.style.display = 'none';
-  });
-
-  uploadModal && (uploadModal.onclick = (e) => {
-    if (e.target === uploadModal) uploadModal.style.display = 'none';
-  });
-
-  // Phase 3A: Folder context tracking
-  let currentFolder = "02_Animation";
-  document.querySelectorAll('.pipeline-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.pipeline-item').forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      currentFolder = item.innerText.trim();
-      console.log('Current folder set to', currentFolder);
-    });
-  });
-
-  // Phase 3A: Project-level tab switching (Tasks <-> Versions)
-  const tabTasks = document.getElementById('projTabTasks');
-  const tabVersions = document.getElementById('projTabVersions');
-
-  tabTasks && (tabTasks.onclick = () => {
-    tabTasks.classList.add('active');
-    tabVersions.classList.remove('active');
-    document.getElementById('tasksPanel').style.display = 'block';
-    document.getElementById('versionsPanel').style.display = 'none';
-  });
-
-  tabVersions && (tabVersions.onclick = () => {
-    tabVersions.classList.add('active');
-    tabTasks.classList.remove('active');
-    document.getElementById('tasksPanel').style.display = 'none';
-    document.getElementById('versionsPanel').style.display = 'block';
-  });
-
-</script>
 
 </body>
 </html>
