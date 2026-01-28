@@ -1,0 +1,91 @@
+{
+  "tours": [
+    {
+      "id": "studio_43_whats_new",
+      "type": "spark-tour-window",
+      "autoShow": true,
+      "category": "whats-new",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "appVersion": "4\\.3\\.\\d+",
+        "language": ["en", "es", "zh", "ja", "ru"]
+      }
+    },
+    {
+      "id": "studio_44_whats_new",
+      "type": "spark-tour-window",
+      "autoShow": true,
+      "category": "whats-new",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "appVersion": "4\\.4\\.\\d+",
+        "language": ["en", "es", "zh", "ja", "ru"]
+      }
+    },
+    {
+      "id": "studio_45_whats_new",
+      "type": "spark-tour-window",
+      "autoShow": true,
+      "category": "whats-new",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "appVersion": "4\\.5\\.\\d+",
+        "language": ["en", "es", "zh", "ja", "ru"]
+      }
+    },
+    {
+      "id": "feature_forecast",
+      "type": "spark-tour-window",
+      "autoShow": false,
+      "category": "feature",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "language": ["en", "es", "zh", "ja", "ru", "ko"]
+      }
+    },
+    {
+      "id": "studio_46_whats_new",
+      "type": "spark-tour-window",
+      "autoShow": true,
+      "category": "whats-new",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "appVersion": "4\\.6\\.\\d+",
+        "language": ["en", "es", "zh", "ja", "ru"]
+      }
+    },
+    {
+      "id": "studio_47_whats_new",
+      "type": "spark-tour-window",
+      "autoShow": true,
+      "category": "whats-new",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "appVersion": "4\\.7\\.\\d+",
+        "language": ["en", "es", "zh", "ja", "ru", "ko"]
+      }
+    },
+    {
+      "id": "studio_48_whats_new",
+      "type": "spark-tour-window",
+      "autoShow": true,
+      "category": "whats-new",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "appVersion": "4\\.8\\.\\d+",
+        "language": ["en", "es", "zh", "ja", "ru", "ko"]
+      }
+    },
+    {
+      "id": "studio_49_whats_new",
+      "type": "spark-tour-window",
+      "autoShow": true,
+      "category": "whats-new",
+      "criteria": {
+        "product": ["ftrack-studio", "ftrack-enterprise"],
+        "appVersion": "4\\.9\\.\\d+",
+        "language": ["en", "es", "zh", "ja", "ru", "ko"]
+      }
+    }
+  ]
+}
