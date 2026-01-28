@@ -1,0 +1,1 @@
+{"type":"error.list","request_id":"000hh7p2t85cmke0rej0","errors":[{"code":"422","message":"Cannot have more than 120 active event names"}]}
