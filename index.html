@@ -77,7 +77,7 @@
     display: flex;
     gap: 16px;
     padding: 16px;
-    height: calc(100vh - 140px);
+    height: calc(100vh - 220px);
   }
 
   .column {
@@ -169,6 +169,100 @@
   .project-item:hover {
     background: var(--card);
   }
+
+  /* Versions */
+  .project-tabs { padding: 12px 16px; border-bottom: 1px solid var(--line); display:flex; gap:8px }
+  .project-tab { padding:6px 12px; border-radius:6px; color:var(--muted); cursor:pointer }
+  .project-tab.active { color:var(--text); background: rgba(183,143,191,0.08) }
+
+  .versions-panel {
+    padding: 12px;
+  }
+
+  .version-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .upload-btn {
+    background: rgba(183,143,191,0.2);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .version-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .version-table th,
+  .version-table td {
+    padding: 8px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+
+  .version-table th {
+    color: var(--muted);
+    font-weight: normal;
+  }
+
+  .empty-state {
+    padding: 40px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  /* Upload Modal */
+  .upload-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+
+  .upload-box {
+    background: var(--panel);
+    padding: 16px;
+    width: 420px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+
+  .upload-box h3 {
+    margin-top: 0;
+    font-size: 14px;
+  }
+
+  .upload-option {
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+
+  .upload-option:hover {
+    background: var(--card);
+  }
+
+  .upload-box textarea {
+    width: 100%;
+    background: #0d1116;
+    border: 1px solid var(--line);
+    color: var(--text);
+    margin-top: 8px;
+    padding: 6px;
+    resize: vertical;
+  }
 </style>
 </head>
 
@@ -195,30 +289,63 @@
   <div class="tab">Schedule</div>
 </div>
 
-<!-- Task Board -->
-<div class="board">
+<!-- Project Tabs -->
+<div class="project-tabs">
+  <div class="project-tab active" id="tabTasks">Tasks</div>
+  <div class="project-tab" id="tabVersions">Versions</div>
+</div>
 
-  <div class="column">
-    <div class="column-title">Open (To Do)</div>
-    <div class="card">
-      <div class="card-title">Animation_04</div>
-      <div class="card-meta">LE 2880 / 02_Animation</div>
+<!-- Project Body -->
+<div class="project-body">
+
+  <!-- Tasks Panel (moved board here) -->
+  <div class="tasks-panel">
+    <!-- Task Board -->
+    <div class="board">
+
+      <div class="column">
+        <div class="column-title">Open (To Do)</div>
+        <div class="card">
+          <div class="card-title">Animation_04</div>
+          <div class="card-meta">LE 2880 / 02_Animation</div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="column-title">In Progress</div>
+        <div class="card">
+          <div class="card-title">Anim + Retime 02</div>
+          <div class="card-meta">LE 2974 / 02_Animation</div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="column-title">Closed</div>
+        <div class="card">
+          <div class="card-title">Final Output</div>
+          <div class="card-meta">LE 2154 / OUTPUT</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div class="column">
-    <div class="column-title">In Progress</div>
-    <div class="card">
-      <div class="card-title">Anim + Retime 02</div>
-      <div class="card-meta">LE 2974 / 02_Animation</div>
-    </div>
+  <!-- Timeline placeholder -->
+  <div class="timeline-panel" style="display:block; padding:16px; color:var(--muted);">
+    Timeline / activity (placeholder)
   </div>
 
-  <div class="column">
-    <div class="column-title">Closed</div>
-    <div class="card">
-      <div class="card-title">Final Output</div>
-      <div class="card-meta">LE 2154 / OUTPUT</div>
+  <!-- Versions Panel -->
+  <div class="versions-panel" id="versionsPanel" style="display:none;">
+    <div class="version-actions">
+      <div class="upload-btn" id="uploadBtn">Upload</div>
+    </div>
+
+    <div id="versionsContent">
+      <div class="empty-state">
+        No versions yet<br><br>
+        Upload your first file
+      </div>
     </div>
   </div>
 
@@ -251,6 +378,26 @@
   </div>
 </div>
 
+<!-- Upload Modal -->
+<div class="upload-modal" id="uploadModal">
+  <div class="upload-box">
+    <h3>Upload File</h3>
+
+    <div class="upload-option" id="createNew">
+      Create New
+    </div>
+
+    <div class="upload-option" id="versionUp" style="display:none;">
+      Version Up (from existing)
+    </div>
+
+    <textarea placeholder="Add description..."></textarea>
+
+    <br><br>
+    <div class="upload-btn" id="confirmUpload">Confirm</div>
+  </div>
+</div>
+
 <script>
   const projectsBtn = document.querySelector('.nav-item');
   const overlay = document.getElementById('projectsOverlay');
@@ -265,6 +412,63 @@
       alert('Project selected: ' + item.innerText);
     });
   });
+
+  const tabTasks = document.getElementById('tabTasks');
+  const tabVersions = document.getElementById('tabVersions');
+  const versionsPanel = document.getElementById('versionsPanel');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const uploadModal = document.getElementById('uploadModal');
+  const versionsContent = document.getElementById('versionsContent');
+
+  let hasVersion = false;
+
+  tabVersions.onclick = () => {
+    tabTasks.classList.remove('active');
+    tabVersions.classList.add('active');
+    document.querySelector('.tasks-panel').style.display = 'none';
+    document.querySelector('.timeline-panel').style.display = 'none';
+    versionsPanel.style.display = 'block';
+  };
+
+  tabTasks.onclick = () => {
+    tabVersions.classList.remove('active');
+    tabTasks.classList.add('active');
+    document.querySelector('.tasks-panel').style.display = 'block';
+    document.querySelector('.timeline-panel').style.display = 'block';
+    versionsPanel.style.display = 'none';
+  };
+
+  uploadBtn.onclick = () => {
+    uploadModal.style.display = 'flex';
+    document.getElementById('versionUp').style.display = hasVersion ? 'block' : 'none';
+  };
+
+  document.getElementById('confirmUpload').onclick = () => {
+    hasVersion = true;
+    versionsContent.innerHTML = `
+      <table class="version-table">
+        <tr>
+          <th>Version</th>
+          <th>Status</th>
+          <th>Asset Type</th>
+          <th>Published</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>v${hasVersion ? 2 : 1}</td>
+          <td>Open</td>
+          <td>Scene</td>
+          <td>Just now</td>
+          <td>Initial upload</td>
+        </tr>
+      </table>
+    `;
+    uploadModal.style.display = 'none';
+  };
+
+  uploadModal.onclick = (e) => {
+    if (e.target === uploadModal) uploadModal.style.display = 'none';
+  };
 </script>
 
 </body>
