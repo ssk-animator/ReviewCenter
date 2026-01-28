@@ -1,161 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ReviewCenter</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #0f141a;
-      color: #e6e6e6;
-    }
+<meta charset="UTF-8" />
+<title>ReviewCenter – My Tasks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    /* TOP BAR */
-    .topbar {
-      height: 48px;
-      background: #161b22;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      border-bottom: 1px solid #2a2f36;
-    }
+<style>
+  :root {
+    --bg: #0f141a;
+    --panel: #12161b;
+    --card: #171b20;
+    --line: #23282f;
+    --text: #e6edf3;
+    --muted: #9aa4af;
+    --accent: #b78fbf;
+  }
 
-    .topbar span {
-      margin-right: 20px;
-      cursor: pointer;
-    }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
 
-    /* MAIN LAYOUT */
-    .container {
-      display: flex;
-      height: calc(100vh - 48px);
-    }
+  /* Top Bar */
+  .topbar {
+    height: 52px;
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-item {
+    margin-right: 18px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .nav-item.active {
+    color: var(--text);
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 14px;
+  }
 
-    /* LEFT SIDEBAR */
-    .sidebar {
-      width: 240px;
-      background: #12171d;
-      border-right: 1px solid #2a2f36;
-      padding: 10px;
-    }
+  /* Header Stats */
+  .stats {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+  }
 
-    .sidebar h3 {
-      font-size: 13px;
-      color: #9da7b3;
-      margin-top: 20px;
-    }
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .tab.active {
+    background: rgba(183,143,191,0.15);
+    color: var(--text);
+  }
 
-    .sidebar div {
-      padding: 6px 0;
-      font-size: 14px;
-    }
+  /* Board */
+  .board {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    height: calc(100vh - 140px);
+  }
 
-    /* MAIN CONTENT */
-    .content {
-      flex: 1;
-      padding: 16px;
-    }
+  .column {
+    flex: 1;
+    background: transparent;
+  }
+  .column-title {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
 
-    /* TABLE */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th {
-      text-align: left;
-      font-size: 12px;
-      color: #9da7b3;
-      border-bottom: 1px solid #2a2f36;
-      padding: 8px;
-    }
-
-    td {
-      padding: 10px 8px;
-      border-bottom: 1px solid #1f242b;
-      font-size: 14px;
-    }
-
-    .status {
-      background: #2d333b;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      display: inline-block;
-    }
-  </style>
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .card-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+</style>
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <span>Projects</span>
-    <span>My Reviews</span>
-    <span>Bookmarks</span>
-    <span style="margin-left:auto;">🔍</span>
-    <span>👤</span>
+<!-- Top Navigation -->
+<div class="topbar">
+  <div class="nav-item">Projects</div>
+  <div class="nav-item active">My Tasks</div>
+  <div class="nav-item">Bookmarks</div>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div>1 Tasks</div>
+  <div>Not started</div>
+  <div>In progress</div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active">Task board</div>
+  <div class="tab">Task list</div>
+  <div class="tab">Schedule</div>
+</div>
+
+<!-- Task Board -->
+<div class="board">
+
+  <div class="column">
+    <div class="column-title">Open (To Do)</div>
+    <div class="card">
+      <div class="card-title">Animation_04</div>
+      <div class="card-meta">LE 2880 / 02_Animation</div>
+    </div>
   </div>
 
-  <!-- BODY -->
-  <div class="container">
-
-    <!-- LEFT SIDEBAR -->
-    <div class="sidebar">
-      <h3>Navigation</h3>
-      <div>▶ Dashboard</div>
-      <div>▶ Assets</div>
-      <div>▶ Reviews</div>
-      <div>▶ Versions</div>
-
-      <h3>Departments</h3>
-      <div>Animation</div>
-      <div>Motion Graphics</div>
-      <div>Compositing</div>
-      <div>Output</div>
+  <div class="column">
+    <div class="column-title">In Progress</div>
+    <div class="card">
+      <div class="card-title">Anim + Retime 02</div>
+      <div class="card-meta">LE 2974 / 02_Animation</div>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="content">
-      <h2>Versions</h2>
-
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Version</th>
-          <th>Status</th>
-          <th>Published</th>
-          <th>Description</th>
-        </tr>
-
-        <tr>
-          <td>Animation_Intro</td>
-          <td>v03</td>
-          <td><span class="status">Open</span></td>
-          <td>2 days ago</td>
-          <td>Updated timing</td>
-        </tr>
-
-        <tr>
-          <td>Product_Shot</td>
-          <td>v05</td>
-          <td><span class="status">In Review</span></td>
-          <td>5 days ago</td>
-          <td>Lighting pass</td>
-        </tr>
-
-        <tr>
-          <td>Final_Output</td>
-          <td>v01</td>
-          <td><span class="status">Approved</span></td>
-          <td>1 week ago</td>
-          <td>Final delivery</td>
-        </tr>
-      </table>
-    </div>
-
   </div>
+
+  <div class="column">
+    <div class="column-title">Closed</div>
+    <div class="card">
+      <div class="card-title">Final Output</div>
+      <div class="card-meta">LE 2154 / OUTPUT</div>
+    </div>
+  </div>
+
+</div>
 
 </body>
 </html>
