@@ -2,15 +2,160 @@
 <html>
 <head>
   <title>ReviewCenter</title>
-</head>
-<body>
-  <h1>ReviewCenter – API Schema</h1>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0f141a;
+      color: #e6e6e6;
+    }
 
-  <h2>ReviewSession</h2>
-  <p>id : string</p>
-  <p>name : string</p>
-  <p>project_id : string</p>
-  <p>created_at : string</p>
+    /* TOP BAR */
+    .topbar {
+      height: 48px;
+      background: #161b22;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-bottom: 1px solid #2a2f36;
+    }
+
+    .topbar span {
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
+    /* MAIN LAYOUT */
+    .container {
+      display: flex;
+      height: calc(100vh - 48px);
+    }
+
+    /* LEFT SIDEBAR */
+    .sidebar {
+      width: 240px;
+      background: #12171d;
+      border-right: 1px solid #2a2f36;
+      padding: 10px;
+    }
+
+    .sidebar h3 {
+      font-size: 13px;
+      color: #9da7b3;
+      margin-top: 20px;
+    }
+
+    .sidebar div {
+      padding: 6px 0;
+      font-size: 14px;
+    }
+
+    /* MAIN CONTENT */
+    .content {
+      flex: 1;
+      padding: 16px;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th {
+      text-align: left;
+      font-size: 12px;
+      color: #9da7b3;
+      border-bottom: 1px solid #2a2f36;
+      padding: 8px;
+    }
+
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #1f242b;
+      font-size: 14px;
+    }
+
+    .status {
+      background: #2d333b;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      display: inline-block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <span>Projects</span>
+    <span>My Reviews</span>
+    <span>Bookmarks</span>
+    <span style="margin-left:auto;">🔍</span>
+    <span>👤</span>
+  </div>
+
+  <!-- BODY -->
+  <div class="container">
+
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+      <h3>Navigation</h3>
+      <div>▶ Dashboard</div>
+      <div>▶ Assets</div>
+      <div>▶ Reviews</div>
+      <div>▶ Versions</div>
+
+      <h3>Departments</h3>
+      <div>Animation</div>
+      <div>Motion Graphics</div>
+      <div>Compositing</div>
+      <div>Output</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+      <h2>Versions</h2>
+
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Version</th>
+          <th>Status</th>
+          <th>Published</th>
+          <th>Description</th>
+        </tr>
+
+        <tr>
+          <td>Animation_Intro</td>
+          <td>v03</td>
+          <td><span class="status">Open</span></td>
+          <td>2 days ago</td>
+          <td>Updated timing</td>
+        </tr>
+
+        <tr>
+          <td>Product_Shot</td>
+          <td>v05</td>
+          <td><span class="status">In Review</span></td>
+          <td>5 days ago</td>
+          <td>Lighting pass</td>
+        </tr>
+
+        <tr>
+          <td>Final_Output</td>
+          <td>v01</td>
+          <td><span class="status">Approved</span></td>
+          <td>1 week ago</td>
+          <td>Final delivery</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
 
 </body>
 </html>
