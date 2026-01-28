@@ -1,85 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>ReviewCenter</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f1115;
-      color: #ffffff;
-    }
-    header {
-      background: #151821;
-      padding: 12px 20px;
-      display: flex;
-      gap: 20px;
-    }
-    header a {
-      color: #ffffff;
-      text-decoration: none;
-      opacity: 0.8;
-    }
-    header a:hover {
-      opacity: 1;
-    }
-    .container {
-      display: flex;
-      height: calc(100vh - 48px);
-    }
-    .sidebar {
-      width: 220px;
-      background: #12141b;
-      padding: 16px;
-    }
-    .sidebar h3 {
-      margin-top: 0;
-      font-size: 14px;
-      opacity: 0.7;
-    }
-    .project {
-      padding: 8px 0;
-      cursor: pointer;
-    }
-    .project:hover {
-      text-decoration: underline;
-    }
-    .main {
-      flex: 1;
-      padding: 24px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>ReviewCenter</title>
+
+<style>
+:root {
+  --bg: #0b0f14;
+  --panel: #11161d;
+  --card: #161b22;
+  --line: #2a2f36;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --accent: #b78fbf;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* GLOBAL NAV */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-left span {
+  margin-right: 16px;
+  cursor: pointer;
+}
+
+.nav-left .active {
+  color: var(--accent);
+}
+
+/* PROJECT OVERLAY */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+}
+
+.overlay-box {
+  background: var(--panel);
+  width: 600px;
+  margin: 80px auto;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.project-item {
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+/* MY TASKS */
+.board {
+  padding: 16px;
+}
+
+.columns {
+  display: flex;
+  gap: 12px;
+}
+
+.column {
+  flex: 1;
+  background: var(--panel);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.task-card {
+  background: var(--card);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+/* PROJECT VIEW */
+.project-code {
+  display: none;
+  height: calc(100vh - 52px);
+}
+
+.project-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  font-weight: 600;
+}
+
+/* PROJECT TABS */
+.project-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-tab {
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--muted);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.project-tab.active {
+  background: rgba(183,143,191,0.2);
+  color: var(--text);
+}
+
+/* PROJECT BODY */
+.project-body {
+  display: flex;
+  height: calc(100% - 92px);
+}
+
+/* PIPELINE */
+.pipeline-panel {
+  width: 260px;
+  border-right: 1px solid var(--line);
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.pipeline-item {
+  padding: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pipeline-item.active {
+  background: var(--card);
+  border-radius: 4px;
+}
+
+/* TASKS PANEL */
+.tasks-panel {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+/* VERSIONS PANEL */
+.versions-panel {
+  flex: 1;
+  padding: 12px;
+  display: none;
+}
+
+/* TIMELINE */
+.timeline-panel {
+  width: 300px;
+  border-left: 1px solid var(--line);
+  padding: 12px;
+  color: var(--muted);
+}
+</style>
 </head>
+
 <body>
 
-<header>
-  <a href="#">Projects</a>
-  <a href="#">My Tasks</a>
-  <a href="#">Bookmarks</a>
-  <a href="#">Settings</a>
-</header>
-
-<div class="container">
-  <div class="sidebar">
-    <h3>Projects</h3>
-    <div class="project">LOQ 15APH11</div>
-    <div class="project">Yoga Pro 7</div>
-    <div class="project">IdeaPad Gaming</div>
-  </div>
-
-  <div class="main">
-    <h1>LOQ 15APH11</h1>
-    <p>Lenovo</p>
-
-    <h3>Tasks</h3>
-    <ul>
-      <li>Animation – Scene 04</li>
-      <li>Lighting Fix</li>
-      <li>Final Output</li>
-    </ul>
+<!-- GLOBAL NAV -->
+<div class="topbar">
+  <div class="nav-left">
+    <span id="btnProjects">Projects</span>
+    <span class="active">My Tasks</span>
+    <span>Bookmarks</span>
   </div>
 </div>
 
+<!-- PROJECT OVERLAY -->
+<div class="overlay" id="projectOverlay">
+  <div class="overlay-box">
+    <div class="project-item">LE 2880 LOQ 15AHP11</div>
+  </div>
+</div>
+
+<!-- MY TASKS -->
+<div class="board" id="myTasks">
+  <div class="columns">
+    <div class="column">
+      <h4>Open</h4>
+      <div class="task-card">Animation_04</div>
+    </div>
+    <div class="column">
+      <h4>In Progress</h4>
+      <div class="task-card">Anim + Retime 02</div>
+    </div>
+    <div class="column">
+      <h4>Closed</h4>
+      <div class="task-card">Final Output</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECT VIEW -->
+<div class="project-code" id="projectCode">
+
+  <div class="project-header">
+    LE 2880 LOQ 15AHP11
+  </div>
+
+  <div class="project-tabs">
+    <div class="project-tab active" id="tabTasks">Tasks</div>
+    <div class="project-tab" id="tabVersions">Versions</div>
+    <div class="project-tab">Team planner</div>
+    <div class="project-tab">Dashboards</div>
+  </div>
+
+  <div class="project-body">
+
+    <!-- PIPELINE -->
+    <div class="pipeline-panel">
+      <div class="pipeline-item active">02_Animation</div>
+      <div class="pipeline-item">03_Edit</div>
+      <div class="pipeline-item">OUTPUT</div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="tasks-panel" id="tasksPanel">
+      <div class="task-card">Animation_01</div>
+      <div class="task-card">Animation_02</div>
+      <div class="task-card">Character anim + Retime_02</div>
+    </div>
+
+    <!-- VERSIONS -->
+    <div class="versions-panel" id="versionsPanel">
+      No versions yet
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline-panel">
+      Timeline placeholder
+    </div>
+
+  </div>
+</div>
+
+<script>
+const overlay = document.getElementById("projectOverlay");
+const btnProjects = document.getElementById("btnProjects");
+const projectCode = document.getElementById("projectCode");
+const myTasks = document.getElementById("myTasks");
+
+btnProjects.onclick = () => overlay.classList.add("show");
+
+document.querySelector(".project-item").onclick = () => {
+  overlay.classList.remove("show");
+  myTasks.style.display = "none";
+  projectCode.style.display = "block";
+};
+
+let currentFolder = "02_Animation";
+
+document.querySelectorAll(".pipeline-item").forEach(item => {
+  item.onclick = () => {
+    document.querySelectorAll(".pipeline-item").forEach(i => i.classList.remove("active"));
+    item.classList.add("active");
+    currentFolder = item.innerText;
+    console.log("Folder:", currentFolder);
+  };
+});
+
+const tabTasks = document.getElementById("tabTasks");
+const tabVersions = document.getElementById("tabVersions");
+const tasksPanel = document.getElementById("tasksPanel");
+const versionsPanel = document.getElementById("versionsPanel");
+
+tabTasks.onclick = () => {
+  tabTasks.classList.add("active");
+  tabVersions.classList.remove("active");
+  tasksPanel.style.display = "block";
+  versionsPanel.style.display = "none";
+};
+
+tabVersions.onclick = () => {
+  tabVersions.classList.add("active");
+  tabTasks.classList.remove("active");
+  tasksPanel.style.display = "none";
+  versionsPanel.style.display = "block";
+};
+</script>
+
 </body>
 </html>
+
